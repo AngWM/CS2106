@@ -60,8 +60,8 @@ int main(int ac, char **av)
 		FILE * fp;
 		while(1){
 			read(fd[0], buffer, MAX_BUFFER_LEN);
-			fp = fopen("log.txt", "w");
-			fwrite(buffer, 1, sizeof(buffer), fp);
+			fp = fopen("log.txt", "a");
+			fwrite(buffer, strlen(buffer), 1, fp);
 			fclose(fp);
 		}
 	}
@@ -200,7 +200,9 @@ void writeLog(const char *format, ...)
 
 	char buffer[1024];
 	sprintf(buffer, "%s: %s\n", getCurrentTime(), logBuffer);
-	write(fd[1], buffer, strlen(buffer)+1);
+	printf("%s", buffer);
+	int n = write(fd[1], buffer, strlen(buffer)+1);
+	printf("%d\n", n); 
 }
 
 void startServer(uint16_t portNum)
@@ -245,7 +247,6 @@ void startServer(uint16_t portNum)
 		int cpid;
 		if((cpid = fork()) == 0){
 			deliverHTTP(connfd);
-			close(fd[0]);
 			close(fd[1]);
 			exit(0);
 		}
