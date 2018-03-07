@@ -1,0 +1,12 @@
+Wed Mar  7 16:12:50 2018: Web server started at port number 80
+Wed Mar  7 16:13:00 2018: Connection received.
+Wed Mar  7 16:13:01 2018: Serving HTTP/1.1 200 OK
+Date: Wed Mar  7 16:13:01 2018
+Server: CS2106/1.1.0
+Content-Length: 0
+Content-Type: text/html
+Connection: Closed
+
+
+
+
