@@ -28,16 +28,17 @@ int main() {
 
 	for(i=0; i<NUMELTS; i++){
 		data[i]=(int) (((double) rand() / (double) RAND_MAX) * 10000);
-		// data[i]=5;
 	}
 		
 	
     // Now create a parent and child process.
 	int cpid;
 	int half = NUMELTS/2;
-	int numPrimes = 0;
-	int childReturnVal = 0;
-
+	int numPrimes = 0, numPrimesChild = 0;
+	int status;
+	int fd[2];
+	pipe(fd);
+	char buffer[1024];
 	if((cpid = fork()) !=0){
 		
 		//PARENT:
@@ -46,25 +47,29 @@ int main() {
 		// Parent should then print out the number of primes
 	    // found by it, number of primes found by the child,
 	    // And the total number of primes found.
+		close(fd[1]);
 	    for(i=0; i<half; i++){
-	    	numPrimes += prime(data[i]);
+	    	numPrimes += prime(data[i]) ? 1 : 0;
 	    }
 
 	} else{
 		// CHILD:
      	// Check the 8192 to 16383 sub-list.
     	// Send # of primes found to the parent.
-    	for(i=0; i<half; i++){
-    		numPrimes += prime(data[i]);
+		close(fd[0]);
+    	for(i=half; i<NUMELTS; i++){
+    		numPrimes += prime(data[i]) ? 1 : 0;
 	    }
-	    exit(numPrimes);
+		write(fd[1], &numPrimes, sizeof(numPrimes));
+		close(fd[1]);
+	    exit(0);
 	}
-
-	wait(&childReturnVal);
-
+	
+	wait(&status);
+	read(fd[0], &numPrimesChild, sizeof(numPrimesChild));
 	printf("Number of Parent Primes: %d\n", numPrimes);
-	printf("Number of Child Primes: %d\n", WEXITSTATUS(childReturnVal));
-	// numPrimes += childReturnVal;
+	printf("Number of Child Primes: %d\n", numPrimesChild);
+	numPrimes += numPrimesChild;
 	
 	printf("Number of Primes: %d\n", numPrimes);
 
