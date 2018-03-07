@@ -67,6 +67,7 @@ int main() {
 	
 	wait(&status);
 	read(fd[0], &numPrimesChild, sizeof(numPrimesChild));
+	close(fd[0]);
 	printf("Number of Parent Primes: %d\n", numPrimes);
 	printf("Number of Child Primes: %d\n", numPrimesChild);
 	numPrimes += numPrimesChild;
