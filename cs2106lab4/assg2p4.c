@@ -25,7 +25,9 @@ int main()
 
 	for(i=0; i<10; i++)
 		pthread_create(&thread[i], NULL, child, (void *) i);
-
+    for(i=0; i<10; i++)
+    	pthread_join(thread[i], NULL);
+    
 	printf("Final value of glob is %d\n", glob);
 	pthread_mutex_destroy(&mutex);
 	return 0;
