@@ -1,0 +1,5 @@
+Thu Mar 15 17:34:19 2018: Web server started at port number 80
+Thu Mar 15 17:34:43 2018: Connection received.
+Thu Mar 15 17:34:43 2018: Fetching ./index.html
+Thu Mar 15 17:34:43 2018: Cannot find /
+Thu Mar 15 17:34:43 2018: Response: 404:NOT FOUND
