@@ -7,7 +7,7 @@ void *child(void *t)
 {
 	// Increment glob by 1, wait for 1 second, then increment by 1 again.
 	printf("Child %d entering. Glob is currently %d\n", t, glob);
-	glob++
+	glob++;
 	sleep(1);
 	glob++;
 	printf("Child %d exiting. Glob is currently %d\n", t, glob);	
