@@ -53,7 +53,7 @@ int deq(TBuffer *buffer, char *data)
 	buffer->count--;
 	buffer->front = (buffer->front + 1) % QLEN;
 
-	sem_wait(&buffer->empty);	
+	sem_post(&buffer->empty);	
 
 	pthread_mutex_unlock(&buffer->mutex);
 
