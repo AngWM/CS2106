@@ -57,9 +57,6 @@ FILE *logfptr;
 char logBuffer[LOG_BUFFER_LEN];
 
 
-// mutex
-pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-
 TBuffer buffer;
 
 int main(int ac, char **av)
