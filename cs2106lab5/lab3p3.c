@@ -11,7 +11,7 @@
 #include <time.h>
 #include <stdarg.h>
 #include <pthread.h>
-#include "barrier.h"
+#include "buffer.h"
 
 // Port Number
 #define PORTNUM			80
