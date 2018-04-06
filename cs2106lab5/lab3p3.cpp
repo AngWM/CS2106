@@ -217,7 +217,7 @@ void writeLog(const char *format, ...)
 	enq(&buffer, data, strlen(data)+1);
 }
 
-void *logger(){
+void *logger(void*){
 	while(1){
 
 		char data[ENTRY_SIZE];
