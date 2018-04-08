@@ -9,9 +9,6 @@ void initBuffer(TBuffer *buffer)
 	buffer->count=0;
 	buffer->front=0;
 	buffer->back=0;
-	sem_init(&buffer->full, 0, 0); 
-	sem_init(&buffer->empty, 0, 0);
-    pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 }
 
 void enq(TBuffer *buffer, const char *data, int len)
@@ -21,7 +18,9 @@ void enq(TBuffer *buffer, const char *data, int len)
 	pthread_mutex_lock(&buffer->mutex);
 
 	if(buffer->count >= QLEN) {
+		pthread_mutex_unlock(&buffer->mutex);
 		sem_wait(&buffer->empty);
+		pthread_mutex_lock(&buffer->mutex);
 	}
 
 	unsigned int bytesToCopy = (len < ENTRY_SIZE ? len : ENTRY_SIZE);
@@ -43,7 +42,9 @@ int deq(TBuffer *buffer, char *data)
 	pthread_mutex_lock(&buffer->mutex);
 
 	if(buffer->count == 0){
+		pthread_mutex_unlock(&buffer->mutex);
 		sem_wait(&buffer->full);
+		pthread_mutex_lock(&buffer->mutex);
 	}
 
 	int len = buffer->len[buffer->front];
