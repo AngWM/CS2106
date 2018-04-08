@@ -212,12 +212,14 @@ void writeLog(const char *format, ...)
 	vsprintf(myBuffer, format, args);
 	va_end(args);
 
+
+	/*removed previous mutexes. relying on buffer internal mutex*/
 	char data[ENTRY_SIZE];
 	sprintf(data, "%s: %s\n", getCurrentTime(), myBuffer);
 	enq(&buffer, data, strlen(data)+1);
 }
 
-void *logger(void *p){
+void *logger(){
 	while(1){
 
 		char data[ENTRY_SIZE];
