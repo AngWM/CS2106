@@ -15,13 +15,10 @@ void enq(TBuffer *buffer, const char *data, int len)
 {
 	// I only added lock and unlock and also initialisation in buffer.h for question 3
 
-	pthread_mutex_lock(&buffer->mutex);
-
 	if(buffer->count >= QLEN) {
-		pthread_mutex_unlock(&buffer->mutex);
 		sem_wait(&buffer->empty);
-		pthread_mutex_lock(&buffer->mutex);
 	}
+	pthread_mutex_lock(&buffer->mutex);
 
 	unsigned int bytesToCopy = (len < ENTRY_SIZE ? len : ENTRY_SIZE);
 
@@ -39,13 +36,10 @@ int deq(TBuffer *buffer, char *data)
 {
 	// I only added lock and unlock and also initialisation in buffer.h for question 3
 
-	pthread_mutex_lock(&buffer->mutex);
-
 	if(buffer->count == 0){
-		pthread_mutex_unlock(&buffer->mutex);
 		sem_wait(&buffer->full);
-		pthread_mutex_lock(&buffer->mutex);
 	}
+	pthread_mutex_lock(&buffer->mutex);
 
 	int len = buffer->len[buffer->front];
 	memcpy(data, buffer->data[buffer->front], len);
