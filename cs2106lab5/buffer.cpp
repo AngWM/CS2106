@@ -10,7 +10,8 @@ void initBuffer(TBuffer *buffer)
 	buffer->front=0;
 	buffer->back=0;
 	sem_init(&buffer->full, 0, 0); 
-	sem_init(&buffer->empty, 0, 0); 
+	sem_init(&buffer->empty, 0, 0);
+    pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 }
 
 void enq(TBuffer *buffer, const char *data, int len)
