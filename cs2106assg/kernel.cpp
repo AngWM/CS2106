@@ -130,8 +130,45 @@ int linuxScheduler()
 #elif SCHEDULER_TYPE == 1
 
 int RMSScheduler()
-{
-
+{	
+	if(timerTick != 0)
+		--processes[currProcess].timeLeft;
+	TPrioNode *node = checkReady(blockedQueue, timerTick);
+	while(node != NULL){
+		prioRemoveNode(&blockedQueue, node);
+		prioInsertNode(&readyQueue, node);
+		node = checkReady(blockedQueue, timerTick);
+	}
+	if(currProcess == -1) {
+		if(readyQueue == NULL)
+			return currProcess;
+		else {
+			currProcessNode = prioRemove(&readyQueue);
+			currProcess = currProcessNode->procNum;
+		}
+	}
+	//printList(blockedQueue);
+	if(processes[currProcess].timeLeft == 0) {
+		processes[currProcess].timeLeft = processes[currProcess].c;
+		processes[currProcess].deadline += processes[currProcess].p;
+		prioInsertNode(&blockedQueue, currProcessNode);
+		if(suspended != NULL) {
+			currProcessNode = prioRemove(&suspended);
+			return currProcessNode->procNum;
+		}
+		currProcessNode = prioRemove(&readyQueue);
+		if(currProcessNode == NULL)
+			return -1;
+		return currProcessNode->procNum;
+	} else {
+		if(readyQueue != NULL && readyQueue->prio < currProcessNode->prio) {
+			printf("\n====== Pre-Emption ======\n\n");
+			prioInsertNode(&suspended, currProcessNode);
+			currProcessNode = prioRemove(&readyQueue);
+			return currProcessNode->procNum;
+		}
+		return currProcess;
+	}
 	/* TODO: IMPLEMENT RMS  STYLE SCHEDULER
 		FUNCTION SHOULD RETURN PROCESS NUMBER OF THE APPROPRIATE  RUNNING PROCESS.
 		FOR THE CURRENT TIMER TICK.
