@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <algorithm>
 #include "llist.h"
 #include "prioll.h"
 #include "kernel.h"
@@ -95,6 +96,21 @@ int findNextPrio(int currPrio)
 }
 int linuxScheduler()
 {
+	if(timerTick != 0)
+		--processes[currProcess].timeLeft;
+	if(processes[currProcess].timeLeft == 0) {
+		processes[currProcess].timeLeft = processes[currProcess].quantum;
+		insert(&expiredList[currPrio], currProcess, processes[currProcess].quantum);
+		int nextProcNo = findNextPrio(currPrio);
+		if(nextProcNo < 0) {
+			printf("\n******* SWAPPED LIST *******\n\n");
+			std::swap(activeList, expiredList);
+		}
+		return remove(&activeList[findNextPrio(currPrio)]);
+	}
+	
+	return currProcess;
+	
 	/* TODO: IMPLEMENT LINUX STYLE SCHEDULER
 		FUNCTION SHOULD RETURN PROCESS NUMBER OF THE APPROPRIATE RUNNING PROCESS
 		FOR THE CURRENT TIMERTICK.
@@ -110,12 +126,12 @@ int linuxScheduler()
 
 		THIS FUNCTION SHOULD UPDATE THE VARIOUS QUEUES AS IS NEEDED
 		TO IMPLEMENT SCHEDULING */
-	return 0;
 }
 #elif SCHEDULER_TYPE == 1
 
 int RMSScheduler()
 {
+
 	/* TODO: IMPLEMENT RMS  STYLE SCHEDULER
 		FUNCTION SHOULD RETURN PROCESS NUMBER OF THE APPROPRIATE  RUNNING PROCESS.
 		FOR THE CURRENT TIMER TICK.
