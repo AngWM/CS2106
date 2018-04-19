@@ -147,18 +147,26 @@ int RMSScheduler()
 			currProcess = currProcessNode->procNum;
 		}
 	}
+	//printList(readyQueue);
 	//printList(blockedQueue);
 	if(processes[currProcess].timeLeft == 0) {
 		processes[currProcess].timeLeft = processes[currProcess].c;
 		processes[currProcess].deadline += processes[currProcess].p;
 		prioInsertNode(&blockedQueue, currProcessNode);
-		if(suspended != NULL) {
+		if(readyQueue == NULL && suspended == NULL){
+			currProcessNode = NULL;
+			return -1;
+		} else if (suspended != NULL){
+			if(readyQueue != NULL){
+				if(readyQueue->prio < suspended->prio){
+					currProcessNode = prioRemove(&readyQueue);
+					return currProcessNode->procNum;
+				}
+			}
 			currProcessNode = prioRemove(&suspended);
 			return currProcessNode->procNum;
 		}
 		currProcessNode = prioRemove(&readyQueue);
-		if(currProcessNode == NULL)
-			return -1;
 		return currProcessNode->procNum;
 	} else {
 		if(readyQueue != NULL && readyQueue->prio < currProcessNode->prio) {
