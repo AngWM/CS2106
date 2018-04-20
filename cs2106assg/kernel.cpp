@@ -8,8 +8,8 @@
 
 /*
 
-	STUDENT 1 NUMBER:
-	STUDENT 1 NAME:
+	STUDENT 1 NUMBER: A0168721B
+	STUDENT 1 NAME:	Ang Wei Ming
 
 	STUDENT 2 NUMBER:
 	STUDENT 2 NAME:
@@ -100,7 +100,7 @@ int linuxScheduler()
 		--processes[currProcess].timeLeft;
 	if(processes[currProcess].timeLeft == 0) {
 		processes[currProcess].timeLeft = processes[currProcess].quantum;
-		insert(&expiredList[currPrio], currProcess, processes[currProcess].quantum);
+		insert(&expiredList[processes[currProcess].prio], currProcess, processes[currProcess].quantum);
 		int nextProcNo = findNextPrio(currPrio);
 		if(nextProcNo < 0) {
 			printf("\n******* SWAPPED LIST *******\n\n");
